@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Órdenes de Servicio - Lavandería</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f2f6fa;
+    margin:0;
+}
+
+header{
+    background:#1976d2;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+nav{
+    background:#333;
+    padding:10px;
+    text-align:center;
+}
+
+nav button{
+    background:#1976d2;
+    color:white;
+    border:none;
+    padding:10px;
+    margin:5px;
+    cursor:pointer;
+}
+
+section{
+    background:white;
+    margin:20px;
+    padding:20px;
+    border-radius:10px;
+}
+
+input, select{
+    width:90%;
+    padding:8px;
+    margin:5px;
+}
+
+button{
+    padding:8px 15px;
+    background:#1976d2;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:8px;
+    text-align:center;
+}
+
+.oculto{
+    display:none;
+}
+
+.card{
+    background:#e3f2fd;
+    padding:15px;
+    border-radius:8px;
+    margin:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h1>Lavandería</h1>
+<h2>Sistema de Órdenes de Servicio y Seguimiento de Prendas</h2>
+</header>
+
+
+<nav>
+<button onclick="mostrar('clientes')">Clientes</button>
+<button onclick="mostrar('ordenes')">Órdenes</button>
+<button onclick="mostrar('prendas')">Prendas</button>
+<button onclick="mostrar('seguimiento')">Seguimiento</button>
+<button onclick="mostrar('reportes')">Reportes</button>
+</nav>
+
+
+<section id="clientes">
+
+<h2>1. Registro de Clientes</h2>
+
+<input id="nombre" placeholder="Nombre del cliente">
+<input id="telefono" placeholder="Teléfono">
+<input id="correo" placeholder="Correo">
+
+<button onclick="guardarCliente()">Registrar Cliente</button>
+
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Teléfono</th>
+<th>Correo</th>
+</tr>
+</thead>
+
+<tbody id="tablaClientes"></tbody>
+
+</table>
+
+</section>
+
+
+
+<section id="ordenes" class="oculto">
+
+<h2>2. Registro de Órdenes</h2>
+
+<input id="clienteOrden" placeholder="Cliente">
+
+<select id="servicio">
+<option>Lavado</option>
+<option>Planchado</option>
+<option>Lavado y Planchado</option>
+</select>
+
+<input id="precio" placeholder="Precio">
+
+<button onclick="crearOrden()">Crear Orden</button>
+
+
+<table>
+
+<tr>
+<th>N° Orden</th>
+<th>Cliente</th>
+<th>Servicio</th>
+<th>Precio</th>
+<th>Estado</th>
+</tr>
+
+<tbody id="tablaOrdenes"></tbody>
+
+</table>
+
+</section>
+
+
+
+<section id="prendas" class="oculto">
+
+<h2>3. Registro de Prendas</h2>
+
+<input id="tipoPrenda" placeholder="Tipo de prenda">
+
+<input id="cantidad" placeholder="Cantidad">
+
+<input id="color" placeholder="Color">
+
+
+<button onclick="guardarPrenda()">Registrar Prenda</button>
+
+
+<table>
+
+<tr>
+<th>Prenda</th>
+<th>Cantidad</th>
+<th>Color</th>
+</tr>
+
+<tbody id="tablaPrendas"></tbody>
+
+</table>
+
+</section>
+
+
+
+<section id="seguimiento" class="oculto">
+
+<h2>4. Seguimiento de Órdenes</h2>
+
+
+<input id="buscarOrden" placeholder="Número de orden">
+
+
+<select id="nuevoEstado">
+
+<option>Recibida</option>
+<option>En lavado</option>
+<option>Secado</option>
+<option>Planchado</option>
+<option>Lista para entregar</option>
+<option>Entregada</option>
+
+</select>
+
+
+<button onclick="actualizarEstado()">Actualizar</button>
+
+
+<div id="resultado"></div>
+
+
+</section>
+
+
+
+
+<section id="reportes" class="oculto">
+
+<h2>5. Reportes</h2>
+
+<div class="card">
+<h3>Total Clientes:</h3>
+<p id="totalClientes">0</p>
+</div>
+
+
+<div class="card">
+<h3>Total Órdenes:</h3>
+<p id="totalOrdenes">0</p>
+</div>
+
+
+<div class="card">
+<h3>Total Prendas:</h3>
+<p id="totalPrendas">0</p>
+</div>
+
+
+</section>
+
+
+
+<script>
+
+let clientes=[];
+let ordenes=[];
+let prendas=[];
+
+
+function mostrar(id){
+
+let secciones=document.querySelectorAll("section");
+
+secciones.forEach(s=>s.classList.add("oculto"));
+
+document.getElementById(id).classList.remove("oculto");
+
+}
+
+
+// CLIENTES
+
+function guardarCliente(){
+
+let cliente={
+nombre:nombre.value,
+telefono:telefono.value,
+correo:correo.value
+};
+
+clientes.push(cliente);
+
+mostrarClientes();
+
+actualizarReportes();
+
+}
+
+
+function mostrarClientes(){
+
+tablaClientes.innerHTML="";
+
+clientes.forEach(c=>{
+
+tablaClientes.innerHTML+=`
+
+<tr>
+<td>${c.nombre}</td>
+<td>${c.telefono}</td>
+<td>${c.correo}</td>
+</tr>
+
+`;
+
+});
+
+}
+
+
+
+// ORDENES
+
+
+function crearOrden(){
+
+let orden={
+
+id:ordenes.length+1,
+cliente:clienteOrden.value,
+servicio:servicio.value,
+precio:precio.value,
+estado:"Recibida"
+
+};
+
+
+ordenes.push(orden);
+
+mostrarOrdenes();
+
+actualizarReportes();
+
+}
+
+
+
+function mostrarOrdenes(){
+
+tablaOrdenes.innerHTML="";
+
+
+ordenes.forEach(o=>{
+
+tablaOrdenes.innerHTML+=`
+
+<tr>
+
+<td>${o.id}</td>
+<td>${o.cliente}</td>
+<td>${o.servicio}</td>
+<td>$${o.precio}</td>
+<td>${o.estado}</td>
+
+</tr>
+
+`;
+
+});
+
+
+}
+
+
+
+// PRENDAS
+
+
+function guardarPrenda(){
+
+let p={
+
+tipo:tipoPrenda.value,
+cantidad:cantidad.value,
+color:color.value
+
+};
+
+
+prendas.push(p);
+
+
+tablaPrendas.innerHTML="";
+
+
+prendas.forEach(x=>{
+
+tablaPrendas.innerHTML+=`
+
+<tr>
+<td>${x.tipo}</td>
+<td>${x.cantidad}</td>
+<td>${x.color}</td>
+</tr>
+
+`;
+
+});
+
+
+actualizarReportes();
+
+}
+
+
+
+// SEGUIMIENTO
+
+
+function actualizarEstado(){
+
+let id=parseInt(buscarOrden.value);
+
+
+let orden=ordenes.find(o=>o.id===id);
+
+
+if(orden){
+
+orden.estado=nuevoEstado.value;
+
+resultado.innerHTML=
+"Orden "+id+" actualizada a: "+orden.estado;
+
+mostrarOrdenes();
+
+}else{
+
+resultado.innerHTML="Orden no encontrada";
+
+}
+
+}
+
+
+
+// REPORTES
+
+
+function actualizarReportes(){
+
+totalClientes.innerHTML=clientes.length;
+
+totalOrdenes.innerHTML=ordenes.length;
+
+totalPrendas.innerHTML=prendas.length;
+
+}
+
+
+</script>
+
+
+</body>
+</html>
