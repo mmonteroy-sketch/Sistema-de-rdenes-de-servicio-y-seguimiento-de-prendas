@@ -60,3 +60,14 @@ Mario Montero
 ## Estado del proyecto
 
 Prototipo funcional en desarrollo.
+git init
+
+git add .
+
+git commit -m "Creación inicial del sistema web de lavandería"
+
+git branch -M main
+
+git remote add origin URL_DE_TU_REPOSITORIO
+
+git push -u origin main
