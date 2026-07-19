@@ -68,6 +68,5 @@ git commit -m "Creación inicial del sistema web de lavandería"
 
 git branch -M main
 
-git remote add origin URL_DE_TU_REPOSITORIO
-
+git remote add origin(https://github.com/mmonteroy-sketch/Sistema-de-rdenes-de-servicio-y-seguimiento-de-prendas.git)
 git push -u origin main
